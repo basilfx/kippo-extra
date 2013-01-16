@@ -32,6 +32,8 @@ Since kippo does not pass the environment variables (yet), you'll have apply a p
 
 The patch is included in the `patch` directory and makes this behavior selectable. Change directory to `KIPPO_ROOT/kippo/core` and execute `patch -p0 < /path/to/honeypot.py.patch`. The patch should be successfully applied. Patch is created against revision 220 of the source.
 
+This issue has been reported. See https://code.google.com/p/kippo/issues/detail?id=59 for more information.
+
 ### Note 2
 The commands require you have a fake filesystem ready with fake links to the commands. Therefore, make sure the `/path/to/command` is in your fake filesystem. If a command does not work in a session, try to `touch /path/to/command` and then try again. If it works now, then you do not have the fake links in your fake filesystem.
 
