@@ -21,13 +21,13 @@ Installation
 
 Please read the full installation part.
 
-Python 2.7 or later is required (Python 3.x isn't). Note that the
-minimal version is different from kippo itself.
+Python 2.7 or later is required (Python 3.x isn't). Install kippo-extra
+via one of the methods below.
 
-Install kippo-extra via ``pip install kippo-extra``, or clone this
-repository, ``cd`` into the newly created directory and run
-``python setup.py install``. In case one of both ways fail, make sure
-you have proper permissions. To check if everythin works, you can run
+-  ``pip install kippo-extra``
+-  ``pip install pip install git+git://github.com/basilfx/kippo-extra.git``.
+
+To check if everything works, you can run
 ``python -c 'import kippo_extra'`` which should not produce any errors.
 
 Kippo doesn't come with a plugin system. Therefore, the kippo source
@@ -43,10 +43,6 @@ the commands. Therefore, make sure the ``/path/to/command`` is in your
 fake filesystem. If a command does not work in a session, try to
 ``touch /path/to/command`` and then try again. If it works now, then you
 do not have the fake links in your fake filesystem.
-
-This issue has been reported. See
-https://code.google.com/p/kippo/issues/detail?id=59 for more
-information.
 
 Note 2
 ~~~~~~
