@@ -44,6 +44,10 @@ fake filesystem. If a command does not work in a session, try to
 ``touch /path/to/command`` and then try again. If it works now, then you
 do not have the fake links in your fake filesystem.
 
+This issue has been reported. See
+https://code.google.com/p/kippo/issues/detail?id=59 for more
+information.
+
 Note 2
 ~~~~~~
 
