@@ -22,6 +22,8 @@ Kippo doesn't come with a plugin system. Therefore, the kippo source should be m
 ### Note 1
 The commands require you have a fake filesystem ready with fake links to the commands. Therefore, make sure the `/path/to/command` is in your fake filesystem. If a command does not work in a session, try to `touch /path/to/command` and then try again. If it works now, then you do not have the fake links in your fake filesystem.
 
+This issue has been reported. See https://code.google.com/p/kippo/issues/detail?id=59 for more information.
+
 ### Note 2
 A small portion of the kippo source code is modified at runtime by intercepting imports (See PEP302). However, these patches are dependend on the version of kippo. At this moment, the patches are based on SVN Revision 246. In case a new version is available and kippo fails to start, you can try to manually apply the patches to the kippo source (see the directory `kippo_extra/patches`). Insert `PATCH_SOURCE = False` in `KIPPO_ROOT/kippo/__init__.py` to disable runtime patching.
 
