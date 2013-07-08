@@ -1,4 +1,4 @@
-# Copyright (c) 2012 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
 from kippo.core.honeypot import HoneyPotCommand
 
@@ -14,7 +14,7 @@ class ExtendedHoneyPotCommand(HoneyPotCommand):
 
         # Override default writeln
         def _writeln(data):
-            """ 
+            """
             Write data to the honeypot terminal. Data can be a string, but also
             an iterable
             """

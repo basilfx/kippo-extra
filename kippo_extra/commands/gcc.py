@@ -1,6 +1,6 @@
-# Copyright (c) 2012 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
-from utils import ExtendedHoneyPotCommand
+from kippo_extra.utils import ExtendedHoneyPotCommand
 from twisted.internet import reactor
 
 import time, re, getopt, random
@@ -40,7 +40,7 @@ class command_gcc(ExtendedHoneyPotCommand):
                   "\x01\x00\x00\x00"
 
     def start(self):
-        """ 
+        """
         Parse as much as possible from a GCC syntax and generate the output
         that is requested. The file that is generated can be read (and will)
         output garbage from an actual file, but when executed, it will generate
@@ -56,7 +56,7 @@ class command_gcc(ExtendedHoneyPotCommand):
         * gcc test.c -o program -lm
         * gcc -g test.c -o program -lm
         * gcc test.c -DF_CPU=16000000 -I../etc -o program
-        * gcc test.c -O2 -o optimezed_program
+        * gcc test.c -O2 -o optimized_program
         * gcc test.c -Wstrict-overflow=n -o overflowable_program
 
         Others:
@@ -88,10 +88,10 @@ class command_gcc(ExtendedHoneyPotCommand):
                 return
             elif o in ("-h"):
                 self.arg_missing("-h")
-                return 
+                return
             elif o in ("--help"):
                 self.help()
-                return 
+                return
             elif o in ("-o"):
                 if len(a) == 0:
                     self.arg_missing("-o")
@@ -118,7 +118,7 @@ class command_gcc(ExtendedHoneyPotCommand):
             self.scheduled = reactor.callLater(timeout, func)
         else:
             self.no_files()
-    
+
     def ctrl_c(self):
         """ Make sure the scheduled call will be canceled """
 
@@ -126,7 +126,7 @@ class command_gcc(ExtendedHoneyPotCommand):
             self.scheduled.cancel()
 
     def no_files(self):
-        """ Notify user there are not files, and exit """
+        """ Notify user there are no input files, and exit """
         self.writeln_and_exit('%s: no input files' % command_gcc.APP_NAME)
 
     def version(self, short):
@@ -149,7 +149,7 @@ class command_gcc(ExtendedHoneyPotCommand):
                 'Using built-in specs.',
                 'Target: x86_64-linux-gnu',
                 'Configured with: ../src/configure -v --with-pkgversion=\'Debian %s-8\' --with-bugurl=file:///usr/share/doc/gcc-%s/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-%s --enable-shared --enable-multiarch --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/%s --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-objc-gc --with-arch-32=i586 --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu' % (version, version_short, version_short, version_short),
-                'Thread model: posix', 
+                'Thread model: posix',
                 'gcc version %s (Debian %s-8)' % (version, version)
             )
 

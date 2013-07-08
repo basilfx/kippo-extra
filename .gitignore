@@ -1,1 +1,7 @@
+# Python related
 *.pyc
+
+# Setuptools related
+build/
+dist/
+kippo_extra.egg-info/

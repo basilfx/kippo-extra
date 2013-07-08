@@ -1,6 +1,6 @@
-# Copyright (c) 2012 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
-from utils import ExtendedHoneyPotCommand
+from kippo_extra.utils import ExtendedHoneyPotCommand
 from twisted.internet import reactor
 
 import time, re, getopt, random

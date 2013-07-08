@@ -1,6 +1,6 @@
-# Copyright (c) 2012 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
-from utils import ExtendedHoneyPotCommand, ModifiedOptionParser, OptionParsingError, OptionParsingExit
+from kippo_extra.utils import ExtendedHoneyPotCommand, ModifiedOptionParser, OptionParsingError, OptionParsingExit
 from twisted.internet import reactor
 
 commands = {}
@@ -127,7 +127,7 @@ class command_iptables(ExtendedHoneyPotCommand):
         self.exit()
 
     def setup_table(self, table):
-        """ 
+        """
         Called during startup to make sure the current environment has some
         fake rules in memory.
         """
@@ -193,7 +193,7 @@ class command_iptables(ExtendedHoneyPotCommand):
     def is_valid_chain(self, chain):
         # Verify chain existence. Requires valid table first
         if not chain in self.current_table.iterkeys():
-            self.writeln_and_exit("%s: No chain/target/match by that name." % command_iptables.APP_NAME) 
+            self.writeln_and_exit("%s: No chain/target/match by that name." % command_iptables.APP_NAME)
             return False
 
         # Exists
@@ -317,7 +317,7 @@ class command_iptables(ExtendedHoneyPotCommand):
             for chain in chains:
                 # Chain table header
                 chain_output = [
-                    "Chain %s (policy ACCEPT)" % chain, 
+                    "Chain %s (policy ACCEPT)" % chain,
                     "target     prot opt source               destination",
                 ]
 
@@ -329,14 +329,14 @@ class command_iptables(ExtendedHoneyPotCommand):
 
                 # Create one string
                 output.append("\n".join(chain_output))
-                
+
             # Done
             self.writeln_and_exit("\n\n".join(output))
         else:
             self.no_permission()
 
     def flush(self, chain):
-        """ Mark rules as flushed """ 
+        """ Mark rules as flushed """
 
         if self.user_is_root():
             if len(chain) > 0:
@@ -347,27 +347,27 @@ class command_iptables(ExtendedHoneyPotCommand):
                 chains = [chain]
             else:
                 chains = self.current_table.iterkeys()
-            
+
             # Flush
             for chain in chains:
                 self.current_table[chain] = []
 
             self.exit()
         else:
-            self.no_permission() 
+            self.no_permission()
 
     def no_permission(self):
         self.writeln_and_exit([
             '%s %s: can\'t initialize iptables table \'filter\': Permission denied (you must be root)' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
             'Perhaps iptables or your kernel needs to be upgraded.'
-        ])  
+        ])
 
     def no_command(self):
         """ Print no command message and exit """
 
         self.writeln_and_exit([
             '%s %s: no command specified' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
-            'Try \'iptables -h\' or \'iptables --help\' for more information.',
+            'Try \`iptables -h\' or \'iptables --help\' for more information.',
         ])
 
     def unknown_option(self, option):
@@ -375,7 +375,7 @@ class command_iptables(ExtendedHoneyPotCommand):
 
         self.writeln_and_exit([
             '%s %s: unknown option \'%s\'' % (command_iptables.APP_NAME, command_iptables.APP_VERSION, option),
-            'Try \'iptables -h\' or \'iptables --help\' for more information.',
+            'Try \`iptables -h\' or \'iptables --help\' for more information.',
         ])
 
     def bad_argument(self, argument):
@@ -383,7 +383,7 @@ class command_iptables(ExtendedHoneyPotCommand):
 
         self.writeln_and_exit([
             'Bad argument \'%s\'' % argument,
-            'Try \'iptables -h\' or \'iptables --help\' for more information.',
+            'Try \`iptables -h\' or \'iptables --help\' for more information.',
         ])
 
 # Definition
