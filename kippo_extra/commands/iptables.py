@@ -367,7 +367,7 @@ class command_iptables(ExtendedHoneyPotCommand):
 
         self.writeln_and_exit([
             '%s %s: no command specified' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
-            'Try \`iptables -h\' or \'iptables --help\' for more information.',
+            'Try `iptables -h\' or \'iptables --help\' for more information.',
         ])
 
     def unknown_option(self, option):
@@ -375,7 +375,7 @@ class command_iptables(ExtendedHoneyPotCommand):
 
         self.writeln_and_exit([
             '%s %s: unknown option \'%s\'' % (command_iptables.APP_NAME, command_iptables.APP_VERSION, option),
-            'Try \`iptables -h\' or \'iptables --help\' for more information.',
+            'Try `iptables -h\' or \'iptables --help\' for more information.',
         ])
 
     def bad_argument(self, argument):
@@ -383,7 +383,7 @@ class command_iptables(ExtendedHoneyPotCommand):
 
         self.writeln_and_exit([
             'Bad argument \'%s\'' % argument,
-            'Try \`iptables -h\' or \'iptables --help\' for more information.',
+            'Try `iptables -h\' or \'iptables --help\' for more information.',
         ])
 
 # Definition
