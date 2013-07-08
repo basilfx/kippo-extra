@@ -1,4 +1,4 @@
-# kippo-commands
+# kippo-extra
 Set of extra commands for the kippo SSH honeypot daemon (http://code.google.com/p/kippo/).
 
 ## Provided commands
@@ -10,33 +10,23 @@ Set of extra commands for the kippo SSH honeypot daemon (http://code.google.com/
 
 The commands are based on the x64 build of Debian 5.
 
-
 ## Installation
 Please read the full installation part.
 
-Kippo does not have an easy way to add commands via the `kippo.cfg` file. Therefore, you will have to copy the folder `basilfx` to the `KIPPO_ROOT/kippo/commands/` directory. You will also have to edit the file `KIPPO_ROOT/kippo/commands/__init__.py` file and add the following after the last command in the list:
+Python 2.7 or later is required (Python 3.x isn't). Note that the minimal version is different from kippo itself.
 
-```
-# Custom
-'basilfx.gcc',
-'basilfx.iptables',
-'basilfx.netstat',
-'basilfx.env',
-'basilfx.which',
-```
+Install kippo-extra via `pip install kippo-extra`, or clone this repository, `cd` into the newly created directory and run `python setup.py install`. In case one of both ways fail, make sure you have proper permissions. To check if everythin works, you can run `python -c 'import kippo_extra'` which should not produce any errors.
 
-Make sure you put it in the list. Remove a line to remove a command.
+Kippo doesn't come with a plugin system. Therefore, the kippo source should be modified. Open the file `KIPPO_ROOT/kippo/__init__.py`. By default, it is an empty file. Insert the line `from kippo_extra import loader` and save the file.
 
 ### Note 1
-Since kippo does not pass the environment variables (yet), you'll have apply a patch to the kippo source for now. By default, kippo also resolves command line arguments. For example, if you execute `gcc testfile.c -o test` and there exists a file/program called test, it would resolve it to `/path/to/test`. But in this case, `test` is the name of the output file you want to create in the current directory directory!
-
-The patch is included in the `patch` directory and makes this behavior selectable. Change directory to `KIPPO_ROOT/kippo/core` and execute `patch -p0 < /path/to/honeypot.py.patch`. The patch should be successfully applied. Patch is created against revision 220 of the source.
-
-### Note 2
 The commands require you have a fake filesystem ready with fake links to the commands. Therefore, make sure the `/path/to/command` is in your fake filesystem. If a command does not work in a session, try to `touch /path/to/command` and then try again. If it works now, then you do not have the fake links in your fake filesystem.
 
+### Note 2
+A small portion of the kippo source code is modified at runtime by intercepting imports (See PEP302). However, these patches are dependend on the version of kippo. At this moment, the patches are based on SVN Revision 246. In case a new version is available and kippo fails to start, you can try to manually apply the patches to the kippo source (see the directory `kippo_extra/patches`). Insert `PATCH_SOURCE = False` in `KIPPO_ROOT/kippo/__init__.py` to disable runtime patching.
+
 ## Known issues
-Probably a lot ;)
+Probably a lot.
 
 I'm not a Unix guru, so I have no advanced knowledge of all commands and possible options. I have implemented the basic options to make an honeypot session more realistic.
 
