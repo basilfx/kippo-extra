@@ -16,7 +16,7 @@ Please read the full installation part.
 Python 2.7 or later is required (Python 3.x isn't). Install kippo-extra via one of the methods below.
 
 * `pip install kippo-extra`
-* `pip install pip install git+git://github.com/basilfx/kippo-extra.git`.
+* `pip install git+git://github.com/basilfx/kippo-extra.git`.
 
 To check if everything works, you can run `python -c 'import kippo_extra'` which should not produce any errors.
 
