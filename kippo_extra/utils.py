@@ -1,8 +1,9 @@
-# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013-2015 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
 from kippo.core.honeypot import HoneyPotCommand
 
 import optparse
+
 
 class ExtendedHoneyPotCommand(HoneyPotCommand):
     """
@@ -40,14 +41,17 @@ class ExtendedHoneyPotCommand(HoneyPotCommand):
     def user_is_root(self):
         return self.honeypot.user.username == 'root'
 
+
 class OptionParsingError(RuntimeError):
     def __init__(self, msg):
         self.msg = msg
+
 
 class OptionParsingExit(Exception):
     def __init__(self, status, msg):
         self.msg = msg
         self.status = status
+
 
 class ModifiedOptionParser(optparse.OptionParser):
     def error(self, msg):

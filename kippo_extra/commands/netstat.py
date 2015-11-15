@@ -1,11 +1,9 @@
 # Copyright (c) 2013-2015 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
 from kippo_extra.utils import ExtendedHoneyPotCommand
-from twisted.internet import reactor
-
-import time, re, getopt, random
 
 commands = {}
+
 
 class command_netstat(ExtendedHoneyPotCommand):
     def call(self):

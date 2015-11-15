@@ -3,19 +3,25 @@
 from kippo_extra.utils import ExtendedHoneyPotCommand
 from twisted.internet import reactor
 
-import time, re, getopt, random
+import getopt
+import random
+import time
+import re
 
 commands = {}
 
+
 class command_gcc(ExtendedHoneyPotCommand):
-    # Name of program. Under OSX, you might consider i686-apple-darwin11-llvm-gcc-X.X
-    APP_NAME    = "gcc"
+    # Name of program. Under OSX, you might consider another version such as
+    # i686-apple-darwin11-llvm-gcc-X.X
+    APP_NAME = "gcc"
 
     # GCC verson, used in help, version and the commandline name gcc-X.X
     APP_VERSION = (4, 4, 5)
 
-    # Random binary data, which looks awesome. You could change this to whatever you want, but this
-    # data will be put in the actual file and thus exposed to our hacker when he\she cats the file.
+    # Random binary data, which looks awesome. You could change this to
+    # whatever you want, but this data will be put in the actual file and thus
+    # exposed to our hacker when he\she cats the file.
     RANDOM_DATA = "\x6a\x00\x48\x89\xe5\x48\x83\xe4\xf0\x48\x8b\x7d\x08\x48\x8d\x75\x10\x89\xfa" \
                   "\x83\xc2\x01\xc1\xe2\x03\x48\x01\xf2\x48\x89\xd1\xeb\x04\x48\x83\xc1\x08\x48" \
                   "\x83\x39\x00\x75\xf6\x48\x83\xc1\x08\xe8\x0c\x00\x00\x00\x89\xc7\xe8\xb9\x00" \
@@ -74,7 +80,7 @@ class command_gcc(ExtendedHoneyPotCommand):
         # Parse options or display no files
         try:
             opts, args = getopt.gnu_getopt(self.args, 'ESchvgo:x:l:I:W:D:X:O:', ['help', 'version', 'param'])
-        except getopt.GetoptError as err:
+        except getopt.GetoptError:
             self.no_files()
             return
 
@@ -133,8 +139,8 @@ class command_gcc(ExtendedHoneyPotCommand):
         """ Print long or short version, and exit """
 
         # Generate version number
-        version = '.'.join([ str(v) for v in command_gcc.APP_VERSION[:3] ])
-        version_short = '.'.join([ str(v) for v in command_gcc.APP_VERSION[:2] ])
+        version = '.'.join([str(v) for v in command_gcc.APP_VERSION[:3]])
+        version_short = '.'.join([str(v) for v in command_gcc.APP_VERSION[:2]])
 
         if short:
             data = (
@@ -159,8 +165,8 @@ class command_gcc(ExtendedHoneyPotCommand):
     def generate_file(self, outfile):
         data = ""
         # TODO: make sure it is written to temp file, not downloads
-        safeoutfile = '%s/%s_%s' % \
-            (self.honeypot.env.cfg.get('honeypot', 'download_path'),
+        safeoutfile = '%s/%s_%s' % (
+            self.honeypot.env.cfg.get('honeypot', 'download_path'),
             time.strftime('%Y%m%d%H%M%S'),
             re.sub('[^A-Za-z0-9]', '_', outfile))
 
@@ -173,7 +179,8 @@ class command_gcc(ExtendedHoneyPotCommand):
                 data = data + command_gcc.RANDOM_DATA
 
         # Write random data
-        with open(safeoutfile, 'wb') as f: f.write(data)
+        with open(safeoutfile, 'wb') as f:
+            f.write(data)
 
         # Output file
         outfile = self.fs.resolve_path(outfile, self.honeypot.cwd)
@@ -263,4 +270,5 @@ class command_gcc(ExtendedHoneyPotCommand):
 
 # Definitions
 commands['/usr/bin/gcc'] = command_gcc
-commands['/usr/bin/gcc-%s' % ('.'.join([ str(v) for v in command_gcc.APP_VERSION[:2] ]))] = command_gcc
+commands['/usr/bin/gcc-%s' % (
+    '.'.join([str(v) for v in command_gcc.APP_VERSION[:2]]))] = command_gcc
