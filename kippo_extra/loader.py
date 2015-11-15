@@ -62,22 +62,26 @@ class KippoPatchingLoader(object):
         # Modified from https://github.com/danielmoniz/merge_in_memory/
         diff = patch.split("\n")
         source = source.split("\n")
-        i = 0;
+        hunk = 0
+        i = 0
 
         # Iterate through diff sections
         for line in diff:
             i += 1
+
             if line.startswith("@"):
-                line = line.replace('-', '')
-                line = line.replace('+', '')
-                line = line.strip('@')
+                hunk = hunk + 1
+
+                line = line.replace("-", "")
+                line = line.replace("+", "")
+                line = line.strip("@")
                 line = line.strip()
 
-                old_info, new_info = line.split(' ')
-                old_info = old_info.split(',')
-                new_info = new_info.split(',')
+                old_info, new_info = line.split(" ")
+                old_info = old_info.split(",")
+                new_info = new_info.split(",")
 
-                i = int(old_info[0]) - 1
+                i = int(new_info[0]) - 1
             elif line.startswith("---") or line.startswith("+++"):
                 continue
             elif line.startswith("-"):
@@ -88,6 +92,10 @@ class KippoPatchingLoader(object):
                 # Add in a new line.
                 line = line[1:]
                 source.insert(i - 1, line)
+            elif line.startswith(" "):
+                # Verify if the line matches, so we know if we are in sync.
+                if source[i - 1] != line[1:]:
+                    raise Exception("Hunk #%d does not match source." % hunk)
 
         # Done
         return "\n".join(source), source_file
