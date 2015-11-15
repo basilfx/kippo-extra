@@ -8,6 +8,15 @@ import os
 # Set to False to disable source patching
 PATCH_SOURCE = True
 
+# List of patches to apply. Format is 'module: (kippo_file, patch_file)'.
+PATCHES = {
+    "kippo.core.honeypot": (
+        "core/honeypot.py", "patches/kippo_core_honeypot.patch"),
+    "kippo.core.protocol": (
+        "core/protocol.py", "patches/kippo_core_protocol.patch"),
+}
+
+
 class KippoExtraLoader(object):
     def find_module(self, fullname, path=None):
         # Intercept command imports
@@ -16,30 +25,32 @@ class KippoExtraLoader(object):
 
         # Intercept core import
         if PATCH_SOURCE:
-            if fullname == "kippo.core.honeypot":
+            if fullname in PATCHES:
                 return KippoPatchingLoader()
 
         return None
 
+
 class KippoPatchingLoader(object):
     def load_module(self, name):
-        # Check loaded modules first
+        # Check if module is already loaded.
         if name in sys.modules:
             return sys.modules[name]
 
-        # Create module
+        # Create a new module.
         module = imp.new_module(name)
 
-        if name == "kippo.core.honeypot":
-            bytecode = self.patch_kippo_core_honeypot()
+        # Check if a patch has to be applied.
+        if name in PATCHES:
+            source, source_file = self.patch_source(*PATCHES[name])
+            bytecode = compile(source, source_file, "exec")
 
-        # Combine them
+        # Run the bytecode inside the new module.
         exec bytecode in module.__dict__
 
-        # Add it as loaded
+        # Add it as loaded.
         sys.modules[name] = module
 
-        # Done
         return module
 
     def get_kippo_root(self):
@@ -100,15 +111,6 @@ class KippoPatchingLoader(object):
         # Done
         return "\n".join(source), source_file
 
-    def patch_kippo_core_honeypot(self):
-        # Read the source
-        source, source_file = self.patch_source(
-            "core/honeypot.py",
-            "patches/kippo_core_honeypot.patch"
-        )
-
-        # Compile it
-        return compile(source, source_file, "exec")
 
 class KippoExtraCommandsLoader(object):
     def load_module(self, name):
@@ -121,6 +123,7 @@ class KippoExtraCommandsLoader(object):
 
         # Not loaded, so load it
         return importlib.import_module(name)
+
 
 def install_hook():
     # Extend kippo's commands

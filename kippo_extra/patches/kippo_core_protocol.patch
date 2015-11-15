@@ -1,0 +1,25 @@
+---
++++
+@@ -111,8 +111,8 @@
+         self.terminal.write(data)
+         self.terminal.nextLine()
+
+-    def call_command(self, cmd, *args):
+-        obj = cmd(self, *args)
++    def call_command(self, cmd, *args, **kwargs):
++        obj = cmd(self, *args, **kwargs)
+         self.cmdstack.append(obj)
+         obj.start()
+
+@@ -177,9 +177,9 @@
+     def initializeScreen(self):
+         self.setInsertMode()
+
+-    def call_command(self, cmd, *args):
++    def call_command(self, cmd, *args, **kwargs):
+         self.setTypeoverMode()
+-        HoneyPotBaseProtocol.call_command(self, cmd, *args)
++        HoneyPotBaseProtocol.call_command(self, cmd, *args, **kwargs)
+
+     def keystrokeReceived(self, keyID, modifier):
+         transport = self.terminal.transport.session.conn.transport
