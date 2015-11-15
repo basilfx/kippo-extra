@@ -5,5 +5,7 @@ __all__ = [
     "gcc",
     "iptables",
     "netstat",
+    "sleep",
+    "uname",
     "which"
 ]
