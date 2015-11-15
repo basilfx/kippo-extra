@@ -1,9 +1,10 @@
 # Copyright (c) 2013-2015 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
-from kippo_extra.utils import ExtendedHoneyPotCommand, ModifiedOptionParser, OptionParsingError, OptionParsingExit
-from twisted.internet import reactor
+from kippo_extra.utils import ExtendedHoneyPotCommand, ModifiedOptionParser, \
+    OptionParsingError, OptionParsingExit
 
 commands = {}
+
 
 class command_iptables(ExtendedHoneyPotCommand):
     # Do not resolve args
@@ -13,7 +14,7 @@ class command_iptables(ExtendedHoneyPotCommand):
     APP_NAME = "iptables"
 
     # iptables app version, used in help messages etc.
-    APP_VERSION = "v1.4.8"
+    APP_VERSION = "v1.4.14"
 
     # Default iptable table
     DEFAULT_TABLE = "filter"
@@ -59,6 +60,7 @@ class command_iptables(ExtendedHoneyPotCommand):
         parser.add_option("-v", "--verbose", dest="verbose", action="store_true")
         parser.add_option("-x", "--exact", dest="exact", action="store_true")
         parser.add_option("--line-numbers", dest="line_numbers", action="store_true")
+        parser.add_option("-n", "--numeric", dest="numeric", action="store_true")
         parser.add_option("--modprobe", dest="modprobe", action="store")
 
         parser.add_option("-t", "--table", dest="table", action="store", default=command_iptables.DEFAULT_TABLE)
@@ -177,10 +179,9 @@ class command_iptables(ExtendedHoneyPotCommand):
         if self.user_is_root():
             # Verify table existence
             if not table in self.tables.iterkeys():
-                self.writeln_and_exit([
-                    '%s: can\'t initialize iptables table \'%s\': Table does not exist (do you need to insmod?)' % (command_iptables.APP_NAME, table),
-                    'Perhaps iptables or your kernel needs to be upgraded.'
-                ])
+                self.writeln( """%s: can\'t initialize iptables table \'%s\': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.""" % (command_iptables.APP_NAME, table) )
+                self.exit()
             else:
                 # Exists
                 return True
@@ -193,7 +194,8 @@ class command_iptables(ExtendedHoneyPotCommand):
     def is_valid_chain(self, chain):
         # Verify chain existence. Requires valid table first
         if not chain in self.current_table.iterkeys():
-            self.writeln_and_exit("%s: No chain/target/match by that name." % command_iptables.APP_NAME)
+            self.writeln("%s: No chain/target/match by that name." % command_iptables.APP_NAME)
+            self.exit()
             return False
 
         # Exists
@@ -206,71 +208,70 @@ class command_iptables(ExtendedHoneyPotCommand):
     def show_help(self):
         """ Show help and exit """
 
-        self.writeln_and_exit([
-            '%s %s' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
-            '',
-            'Usage: iptables -[AD] chain rule-specification [options]',
-            '       iptables -I chain [rulenum] rule-specification [options]',
-            '       iptables -R chain rulenum rule-specification [options]',
-            '       iptables -D chain rulenum [options]',
-            '       iptables -[LS] [chain [rulenum]] [options]',
-            '       iptables -[FZ] [chain] [options]',
-            '       iptables -[NX] chain',
-            '       iptables -E old-chain-name new-chain-name',
-            '       iptables -P chain target [options]',
-            '       iptables -h (print this help information)',
-            '',
-            'Commands:',
-            'Either long or short options are allowed.',
-            '  --append  -A chain       Append to chain',
-            '  --delete  -D chain       Delete matching rule from chain',
-            '  --delete  -D chain rulenum',
-            '               Delete rule rulenum (1 = first) from chain',
-            '  --insert  -I chain [rulenum]',
-            '               Insert in chain as rulenum (default 1=first)',
-            '  --replace -R chain rulenum',
-            '               Replace rule rulenum (1 = first) in chain',
-            '  --list    -L [chain [rulenum]]',
-            '               List the rules in a chain or all chains',
-            '  --list-rules -S [chain [rulenum]]',
-            '               Print the rules in a chain or all chains',
-            '  --flush   -F [chain]     Delete all rules in  chain or all chains',
-            '  --zero    -Z [chain [rulenum]]',
-            '               Zero counters in chain or all chains',
-            '  --new     -N chain       Create a new user-defined chain',
-            '  --delete-chain',
-            '            -X [chain]     Delete a user-defined chain',
-            '  --policy  -P chain target',
-            '               Change policy on chain to target',
-            '  --rename-chain',
-            '            -E old-chain new-chain',
-            '               Change chain name, (moving any references)',
-            'Options:',
-            '[!] --proto    -p proto    protocol: by number or name, eg. \'tcp\'',
-            '[!] --source   -s address[/mask][...]',
-            '               source specification',
-            '[!] --destination -d address[/mask][...]',
-            '               destination specification',
-            '[!] --in-interface -i input name[+]',
-            '               network interface name ([+] for wildcard)',
-            '  --jump    -j target',
-            '               target for rule (may load target extension)',
-            '  --goto      -g chain',
-            '                              jump to chain with no return',
-            '  --match  -m match',
-            '               extended match (may load extension)',
-            '  --numeric    -n      numeric output of addresses and ports',
-            '[!] --out-interface -o output name[+]',
-            '               network interface name ([+] for wildcard)',
-            '  --table  -t table    table to manipulate (default: \'filter\')',
-            '  --verbose    -v      verbose mode',
-            '  --line-numbers       print line numbers when listing',
-            '  --exact  -x      expand numbers (display exact values)',
-            '[!] --fragment -f      match second or further fragments only',
-            '  --modprobe=<command>     try to insert modules using this command',
-            '  --set-counters PKTS BYTES    set the counter during insert/append',
-            '[!] --version  -V      print package version.',
-        ])
+        self.writeln_and_exit("""%s %s'
+
+Usage: iptables -[AD] chain rule-specification [options]
+       iptables -I chain [rulenum] rule-specification [options]
+       iptables -R chain rulenum rule-specification [options]
+       iptables -D chain rulenum [options]
+       iptables -[LS] [chain [rulenum]] [options]
+       iptables -[FZ] [chain] [options]
+       iptables -[NX] chain
+       iptables -E old-chain-name new-chain-name
+       iptables -P chain target [options]
+       iptables -h (print this help information)
+
+Commands:
+Either long or short options are allowed.
+  --append  -A chain       Append to chain
+  --delete  -D chain       Delete matching rule from chain
+  --delete  -D chain rulenum
+               Delete rule rulenum (1 = first) from chain
+  --insert  -I chain [rulenum]
+               Insert in chain as rulenum (default 1=first)
+  --replace -R chain rulenum
+               Replace rule rulenum (1 = first) in chain
+  --list    -L [chain [rulenum]]
+               List the rules in a chain or all chains
+  --list-rules -S [chain [rulenum]]
+               Print the rules in a chain or all chains
+  --flush   -F [chain]     Delete all rules in  chain or all chains
+  --zero    -Z [chain [rulenum]]
+               Zero counters in chain or all chains
+  --new     -N chain       Create a new user-defined chain
+  --delete-chain
+            -X [chain]     Delete a user-defined chain
+  --policy  -P chain target
+               Change policy on chain to target
+  --rename-chain
+            -E old-chain new-chain
+               Change chain name, (moving any references)
+Options:
+[!] --proto    -p proto    protocol: by number or name, eg. \'tcp\'
+[!] --source   -s address[/mask][...]
+               source specification
+[!] --destination -d address[/mask][...]
+               destination specification
+[!] --in-interface -i input name[+]
+               network interface name ([+] for wildcard)
+  --jump    -j target
+               target for rule (may load target extension)
+  --goto      -g chain
+                              jump to chain with no return
+  --match  -m match
+               extended match (may load extension)
+  --numeric    -n      numeric output of addresses and ports
+[!] --out-interface -o output name[+]
+               network interface name ([+] for wildcard)
+  --table  -t table    table to manipulate (default: \'filter\')
+  --verbose    -v      verbose mode
+  --line-numbers       print line numbers when listing
+  --exact  -x      expand numbers (display exact values)
+[!] --fragment -f      match second or further fragments only
+  --modprobe=<command>     try to insert modules using this command
+  --set-counters PKTS BYTES    set the counter during insert/append
+[!] --version  -V      print package version.""" % (
+            command_iptables.APP_NAME, command_iptables.APP_VERSION))
 
     def list_rules(self, chain):
         """ List current rules as commands"""
@@ -357,34 +358,29 @@ class command_iptables(ExtendedHoneyPotCommand):
             self.no_permission()
 
     def no_permission(self):
-        self.writeln_and_exit([
-            '%s %s: can\'t initialize iptables table \'filter\': Permission denied (you must be root)' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
-            'Perhaps iptables or your kernel needs to be upgraded.'
-        ])
+        self.writeln_and_exit("""%s %s: can\'t initialize iptables table \'filter\': Permission denied (you must be root)
+Perhaps iptables or your kernel needs to be upgraded.""" % (
+            command_iptables.APP_NAME, command_iptables.APP_VERSION))
 
     def no_command(self):
         """ Print no command message and exit """
 
-        self.writeln_and_exit([
-            '%s %s: no command specified' % (command_iptables.APP_NAME, command_iptables.APP_VERSION),
-            'Try `iptables -h\' or \'iptables --help\' for more information.',
-        ])
+        self.writeln_and_exit("""%s %s: no command specified'
+Try `iptables -h\' or \'iptables --help\' for more information.""" % (
+            command_iptables.APP_NAME, command_iptables.APP_VERSION) )
 
     def unknown_option(self, option):
         """ Print unknown option message and exit """
 
-        self.writeln_and_exit([
-            '%s %s: unknown option \'%s\'' % (command_iptables.APP_NAME, command_iptables.APP_VERSION, option),
-            'Try `iptables -h\' or \'iptables --help\' for more information.',
-        ])
+        self.writeln_and_exit("""%s %s: unknown option \'%s\''
+Try `iptables -h\' or \'iptables --help\' for more information.""" % (
+            command_iptables.APP_NAME, command_iptables.APP_VERSION, option) )
 
     def bad_argument(self, argument):
         """ Print bad argument and exit """
 
-        self.writeln_and_exit([
-            'Bad argument \'%s\'' % argument,
-            'Try `iptables -h\' or \'iptables --help\' for more information.',
-        ])
+        self.writeln_and_exit("""Bad argument \'%s\'
+Try `iptables -h\' or \'iptables --help\' for more information.""" % argument)
 
 # Definition
 commands['/sbin/iptables'] = command_iptables
