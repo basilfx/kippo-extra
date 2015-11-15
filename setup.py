@@ -13,7 +13,7 @@ except ImportError:
 # Run setup
 setup(
     name="kippo-extra",
-    version="1.0.0",
+    version="1.1.0",
     author="Bas Stottelaar",
     author_email="basstottelaar@gmail.com",
     url="https://github.com/basilfx/kippo-extra",
@@ -21,7 +21,10 @@ setup(
     long_description=open("README.rst").read(),
     license=open("LICENSE").read(),
     packages=["kippo_extra", "kippo_extra.commands"],
-    package_data={"": ["LICENSE", "README.rst"], "kippo_extra/patches": ["*.patches"]},
+    package_data={
+        "": ["LICENSE", "README.rst"],
+        "kippo_extra/patches": ["*.patches"]
+    },
     include_package_data=True,
     classifiers=(
         "Development Status :: 3 - Alpha",

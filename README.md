@@ -7,6 +7,8 @@ Set of extra commands for the kippo SSH honeypot daemon (https://github.com/desa
 * `/sbin/iptables` - fake firewall management, supports flush and list for different tables/chains
 * `/bin/which` - path of binary
 * `/bin/netstat` - work in progress
+* `/bin/sleep` - sleep command
+* `/bin/uname` - kernel and OS identification
 
 The commands are based on the x64 build of Debian 5.
 
