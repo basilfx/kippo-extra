@@ -1,8 +1,9 @@
-# Copyright (c) 2013 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
+# Copyright (c) 2013-2015 Bas Stottelaar <basstottelaar [AT] gmail [DOT] com>
 
 from kippo_extra.utils import ExtendedHoneyPotCommand
 
 commands = {}
+
 
 class command_env(ExtendedHoneyPotCommand):
     def call(self):
